@@ -79,6 +79,13 @@ public class BankAccount {
 	// method to transfer amount
 	public void transferAmount(double amount, BankAccount account) {
 		
+		try {
+			this.withdrawAmount(amount);
+			account.depositAmount(amount);
+		}
+		catch(IllegalArgumentException e){
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	
