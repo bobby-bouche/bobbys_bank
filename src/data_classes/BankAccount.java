@@ -1,5 +1,7 @@
 package data_classes;
 
+import validation_classes.IntegerValidationException;
+
 public class BankAccount {
 	
 	// bankAccount fields
@@ -14,6 +16,7 @@ public class BankAccount {
 	
 	// constructor
 	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, double balance) {
+		validateInteger(accNum);
 		this.accNumber 	= accNum;
 		this.accType 	= accType;
 		this.Fname 		= firstName;
@@ -23,6 +26,13 @@ public class BankAccount {
 		this.accBalance = balance;
 	}
 
+	
+	// validation methods
+	public static void validateInteger(int number) {
+		if(number < 0) {
+			throw new IntegerValidationException("invalid integer: " + number);
+		}
+	}
 	
 	// getters
 	public int getAccNumber() {
