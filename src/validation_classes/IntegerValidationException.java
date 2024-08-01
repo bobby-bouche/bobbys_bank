@@ -1,5 +1,6 @@
 package validation_classes;
 
+@SuppressWarnings("serial")
 public class IntegerValidationException extends IllegalArgumentException {
 	
 	public IntegerValidationException(String message) {
