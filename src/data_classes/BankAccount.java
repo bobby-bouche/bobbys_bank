@@ -1,8 +1,12 @@
 package data_classes;
 
+import validation_classes.AgeValdationException;
 import validation_classes.DoubleValidationException;
+import validation_classes.IllegalWithdrawException;
 import validation_classes.IntegerValidationException;
+import validation_classes.InvalidDepositException;
 import validation_classes.StringValidationException;
+
 
 public class BankAccount {
 	
@@ -22,6 +26,7 @@ public class BankAccount {
 	
 	// constructor
 	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, double balance) {
+		super();
 		validateInteger(accNum);
 		this.accNumber 	= accNum;
 		validateString(accType);
@@ -61,7 +66,7 @@ public class BankAccount {
 	
 	private static void validateAge(Integer age) { 
 		if(age < validAge) {
-			throw new IllegalArgumentException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
+			throw new AgeValdationException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
 	}
 	
@@ -71,7 +76,7 @@ public class BankAccount {
 		return this.accNumber;
 	}
 	
-	public String getAccTyp() {
+	public String getAccType() {
 		return this.accType;
 	}
 	
@@ -88,11 +93,11 @@ public class BankAccount {
 	}
 	
 	public String getAddress() {
-		validateString(address);
 		return this.address;
 	}
 	
 	public void setNewAddress(String newAddress) {
+		validateString(newAddress);
 		this.address = newAddress;
 	}
 	
@@ -105,7 +110,7 @@ public class BankAccount {
 	// method to deposit amount
 	public void depositAmount(double amount) {
 		if(amount <= 0) {
-			throw new IllegalArgumentException("Invalid amount to deposit: " + amount);
+			throw new InvalidDepositException("Invalid amount to deposit: " + amount + ". Amount must be more than zero.");
 		}
 		this.accBalance += amount;
 	}
@@ -114,10 +119,10 @@ public class BankAccount {
 	// method to withraw amount
 	public void withdrawAmount(double amount) {
 		if(amount <= 0) {
-			throw new IllegalArgumentException("Invalid amount to withdraw: " + amount);
+			throw new IllegalWithdrawException("Invalid amount to withdraw: " + amount + ". Amount must be more than zero.");
 		}
 		if(this.accBalance - amount < 0) {
-			throw new IllegalArgumentException("Insufficient funds: " + this.accBalance);
+			throw new IllegalWithdrawException("Insufficient funds: " + this.accBalance);
 		}
 		this.accBalance -= amount;
 	}
@@ -130,12 +135,13 @@ public class BankAccount {
 			this.withdrawAmount(amount);
 			account.depositAmount(amount);
 		}
+		catch(IllegalWithdrawException e){
+			throw e;
+		}
 		catch(IllegalArgumentException e){
-			System.out.println(e.getMessage());
+			throw e;
 		}
 	}
-	
-	
 	
 	
 	@Override
