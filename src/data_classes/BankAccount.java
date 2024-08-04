@@ -8,6 +8,8 @@ import validation_classes.InvalidDepositException;
 import validation_classes.StringValidationException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.*;
 
 
@@ -20,6 +22,10 @@ public class BankAccount {
 	// static block for logger initialization
 	static {
 		try {
+			
+            // Create logs directory if it does not exist
+            Files.createDirectories(Paths.get("logs"));
+            
 			// specifies path to logs directory
 			Handler fileHandler = new FileHandler("logs/BankAccount.log", true);
 			fileHandler.setFormatter(new SimpleFormatter());
