@@ -1,17 +1,14 @@
 package tests;
 
 import data_classes.BankAccount;
-import validation_classes.AgeValdationException;
+import validation_classes.AgeValidationException;
 import validation_classes.DoubleValidationException;
 import validation_classes.IllegalWithdrawException;
 import validation_classes.IntegerValidationException;
-import validation_classes.InvalidDepositException;
 import validation_classes.StringValidationException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -61,6 +58,67 @@ class BankAccountTest {
 		assertThrows(IntegerValidationException.class, () ->
 		{
 			new BankAccount(-1, "Savings", "John", "Doe", 36, "123 Street", 1000.0);
+		});
+	}
+	
+	@Test
+	void testInvalidAccountType() {
+		assertThrows(StringValidationException.class, () -> 
+		{
+			new BankAccount(12345, "", "John", "Doe", 36, "123 Street", 1000.0);
+		});
+	}
+	
+	@Test
+	void testInvalidAge() {
+		assertThrows(AgeValidationException.class, () -> 
+		{
+			new BankAccount(12345, "Savings", "John", "Doe", 15, "123 Street", 1000.0);
+		});
+	}
+	
+	@Test
+	void testDeposit() {
+		account.depositAmount(100.0);
+		assertEquals(1100.0, account.getBalance(), 0.001);
+	}
+	
+	@Test
+	void testInvalidDeposit() {
+		assertThrows(DoubleValidationException.class, () -> {
+			account.depositAmount(-1.0);
+		});
+	}
+	
+	@Test
+	void testWithdraw() {
+		account.withdrawAmount(100.0);
+		assertEquals(900.0, account.getBalance(), 0.001);
+	}
+	
+	@Test
+	void testinsufficientFunds() {
+		assertThrows(IllegalWithdrawException.class, () -> 
+		{
+			account.withdrawAmount(2000.0);
+		});
+	}
+	
+	@Test
+	void testTransfer() {
+		BankAccount anotherAccount = new BankAccount(111009, "Savings", "Jane", "Doe", 23, "123 Street", 1000.0);
+		account.transferAmount(500.0, anotherAccount);
+		assertEquals(500.0, account.getBalance(), 0.001);
+		assertEquals(1500.0, anotherAccount.getBalance(), 0.001);
+		
+	}
+	
+	@Test
+	void testInvalidTransfer() {
+		BankAccount anotherAccount = new BankAccount(111009, "Savings", "Jane", "Doe", 23, "123 Street", 1000.0);
+		assertThrows(IllegalWithdrawException.class, () -> 
+		{
+			account.transferAmount(2000.0, anotherAccount);
 		});
 	}
 

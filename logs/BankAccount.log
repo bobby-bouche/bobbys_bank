@@ -1,2 +1,38 @@
-Aug. 03, 2024 9:56:01 P.M. data_classes.BankAccount validateInteger
-SEVERE: Invalid Integer: -1
+Aug. 04, 2024 2:27:11 P.M. data_classes.BankAccount transferAmount
+SEVERE: Insufficient funds for transfer. Current balance: $1000.00
+Aug. 04, 2024 2:32:14 P.M. data_classes.BankAccount transferAmount
+SEVERE: Insufficient funds for transfer. Current balance: $1000.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Withdrawal: $100.00, New Balance: $900.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount transferAmount
+SEVERE: Insufficient funds for transfer. Current balance: $1000.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Deposit: $100.00, New Balance: $1100.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Withdrawal: $500.00, New Balance: $500.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 111009 - Deposit: $500.00, New Balance: $1500.00
+Aug. 04, 2024 2:35:21 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Transfer: $500.00, New Balance: $500.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Withdrawal: $100.00, New Balance: $900.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount transferAmount
+SEVERE: Insufficient funds for transfer. Current balance: $1000.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Deposit: $100.00, New Balance: $1100.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Withdrawal: $500.00, New Balance: $500.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 111009 - Deposit: $500.00, New Balance: $1500.00
+Aug. 04, 2024 2:39:59 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Transfer: $500.00, New Balance: $500.00
+Aug. 04, 2024 2:42:05 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Withdrawal: $100.00, New Balance: $900.00
+Aug. 04, 2024 2:42:05 P.M. data_classes.BankAccount transferAmount
+SEVERE: Insufficient funds for transfer. Current balance: $1000.00
+Aug. 04, 2024 2:42:05 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Deposit: $100.00, New Balance: $1100.00
+Aug. 04, 2024 2:42:05 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 111009 - Deposit: $500.00, New Balance: $1500.00
+Aug. 04, 2024 2:42:05 P.M. data_classes.BankAccount logTransaction
+INFO: Account No: 12345 - Transfer: $500.00, New Balance: $500.00

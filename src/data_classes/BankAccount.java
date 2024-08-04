@@ -1,10 +1,9 @@
 package data_classes;
 
-import validation_classes.AgeValdationException;
+import validation_classes.AgeValidationException;
 import validation_classes.DoubleValidationException;
 import validation_classes.IllegalWithdrawException;
 import validation_classes.IntegerValidationException;
-import validation_classes.InvalidDepositException;
 import validation_classes.StringValidationException;
 
 import java.io.IOException;
@@ -15,14 +14,18 @@ import java.util.logging.*;
 
 public class BankAccount {
 	
-	// class error logger instance 
+	
+	
+	// transction logger and method will be moved to it own class and called within BankAccount class and Bank class
+	// Each class will have its own log file
+	
+	// class transaction logger instance 
 	private final static Logger logger = Logger.getLogger(BankAccount.class.getName());
 	
 	
-	// static block for logger initialization
+	// static block for Transaction logger initialization
 	static {
 		try {
-			
             // Create logs directory if it does not exist
             Files.createDirectories(Paths.get("logs"));
             
@@ -30,19 +33,22 @@ public class BankAccount {
 			Handler fileHandler = new FileHandler("logs/BankAccount.log", true);
 			fileHandler.setFormatter(new SimpleFormatter());
 			logger.addHandler(fileHandler);
-			
-			// console handler for logging to console
-			ConsoleHandler consoleHandler = new ConsoleHandler();
-			consoleHandler.setLevel(Level.ALL);
-			logger.addHandler(consoleHandler);
-			
-			logger.setLevel(Level.ALL);
-			logger.setUseParentHandlers(false); // disables default console handler
+			logger.setLevel(Level.INFO);
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
 		}
 	}
+	
+	// common method to log transactions
+	private void logTransaction(String action, double amount) {
+		String message = String.format("Account No: %d - %s: $%.2f, New Balance: $%.2f",
+				this.accNumber, action, amount, this.accBalance);
+		logger.log(Level.INFO, message);
+	}
+	
+	
+	
 	
 	
 	// bankAccount fields
@@ -56,7 +62,7 @@ public class BankAccount {
 	
 	
 	// symbolic constants
-	final static Integer validAge = 16;
+	final static Integer minimumAge = 16;
 	
 	
 	// constructor
@@ -82,55 +88,43 @@ public class BankAccount {
 	
 	
 	// validation methods
-	private static void validateInteger(int number) {
-		if(number < 0) {
-			logger.log(Level.SEVERE, "Invalid Integer: " + number);
-			throw new IntegerValidationException("Invalid Integer: " + number);
+	
+	// intger validation method
+	private static void validateInteger(Object obj) {
+		if(obj instanceof Integer) {
+			int number = (Integer) obj;
+			if(number < 0) {
+				throw new IntegerValidationException("Invalid Integer: " + number + ". Value must be must be more thn zero");
+			}
+		}
+		else {
+			throw new IntegerValidationException("Expected an Integer but got: " + obj.getClass().getName());
 		}
 	}
 	
+	// string validation method
 	private static void validateString(String value) {
 		if(value == null || value.isBlank()) {
-			logger.log(Level.SEVERE, "Invalid String: " + value);
 			throw new StringValidationException("Invalid String: " + value);
 		}
 	}
 	
+	// double validation method
 	private static void validateDouble(double number) {
 		if(number < 0) {
-			logger.log(Level.SEVERE, "Invalid Double: " + number);
 			throw new DoubleValidationException("Invalid Double: " + number);
 		}
 	}
 	
+	// minimim age validation method
 	private static void validateAge(Integer age) { 
-		if(age < validAge) {
-			logger.log(Level.SEVERE, "Invalid Age: " + age);
-			throw new AgeValdationException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
+		if(age < minimumAge) {
+			throw new AgeValidationException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
 	}
 	
-	// common validation method for deposit and withdraw
-	private void validateAmount(double amount, String action) {
-		if(amount <= 0) {
-			logAndThrow(new InvalidDepositException("Invalid amount to " + action + ": " + amount + ". Amount moust be more than zero."));
-		}
-	}
-	
-	// common method to log and throw exceptions
-	private void logAndThrow(RuntimeException e) {
-		logger.log(Level.SEVERE, e.getMessage(), e);
-		throw e;
-	}
-	
-	// common method to log transaction
-	private void logTransaction(String action, double amount) {
-		String message = action + " " + amount + ". New Balance: " + this.accBalance;
-		logger.log(Level.INFO, message);
-		System.out.println(message);
-	}
-	
-	
+	// BankAccount validation for object bankaccount need for transfer method
+		
 	
 	// getters and setters
 	public int getAccNumber() {
@@ -168,43 +162,59 @@ public class BankAccount {
 	
 	
 	
+	// Transaction methods
+	
 	// method to deposit amount
 	public void depositAmount(double amount) {
-		validateAmount(amount, "deposit");
+		validateDouble(amount);
 		this.accBalance += amount;
-		logTransaction("Account no: " + this.accNumber + "Deposited", amount);
+		String message = String.format("Account No: %d - Deposit: $%.2f. New Balance: $%.2f",
+				this.accNumber, amount, this.getBalance());
+		System.out.println(message + "\n");
+		logTransaction("Deposit", amount);
 	}
 	
 	
 	// method to withraw amount
 	public void withdrawAmount(double amount) {
-		validateAmount(amount, "withdraw");
-		if(this.accBalance - amount < 0) {
-			logAndThrow(new IllegalWithdrawException("Insufficient funds: " + this.accBalance));
+		validateDouble(amount);;
+		if(this.accBalance - amount >= 0) {
+			this.accBalance -= amount;
+	        String message = String.format("Account No: %d - Withdrawal: $%.2f. New Balance: $%.2f",
+	                this.accNumber, amount, this.getBalance());
+	        System.out.println(message + "\n");
+			logTransaction("Withdrawal", amount);
 		}
-		this.accBalance -= amount;
-		logTransaction("Account no: " + this.accNumber + ": Withdrew", amount);
+		else {
+			throw new IllegalWithdrawException("Insufficient funds. Current balance: $" + this.accBalance);
+		}	
 	}
 	
 	
 	// method to transfer amount
-	public void transferAmount(double amount, BankAccount account) {
+	public void transferAmount(double amount, BankAccount recipient) {
 		
-		try {
-			this.withdrawAmount(amount);
-			account.depositAmount(amount);
-			logger.log(Level.INFO, "Transferred " + amount + " to account " + account.getAccNumber());
+		validateDouble(amount);
+		//validateBankAccount(account);
+	
+		if(this.accBalance >= amount) {
+			this.accBalance -= amount;
+			recipient.depositAmount(amount);
+			String message = String.format("Account No; %d - Transferred $%.2f to Account No: %d. New Balance $%.2f",
+					this.accNumber, amount, recipient.getAccNumber(), this.getBalance());
+			System.out.println(message + "\n");
+			logTransaction("Transfer", amount);
 		}
-		catch(IllegalWithdrawException e){
-			logger.log(Level.SEVERE, "Transfer failed: " + e.getMessage(), e);
-			throw e;
-		}
-		catch(IllegalArgumentException e){
-			logger.log(Level.SEVERE, "Transfer failed: " + e.getMessage(), e);
-			throw e;
+		else {
+			String errorMsg = String.format("Insufficient funds for transfer. Current balance: $%.2f", this.accBalance);
+			logger.log(Level.SEVERE, errorMsg);
+			System.out.println("Transaction failed: Insufficient funds.\n");
+			throw new IllegalWithdrawException("Insufficient funds for transfer.");
 		}
 	}
 	
+	
+	// toString method
 	
 	@Override
 	public String toString() {
