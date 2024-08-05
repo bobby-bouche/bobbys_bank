@@ -6,52 +6,11 @@ import validation_classes.IllegalWithdrawException;
 import validation_classes.IntegerValidationException;
 import validation_classes.StringValidationException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.*;
-
 
 public class BankAccount {
 	
-	
-	
-	// transction logger and method will be moved to it own class and called within BankAccount class and Bank class
-	// Each class will have its own log file
-	
-	// class transaction logger instance 
-	private final static Logger logger = Logger.getLogger(BankAccount.class.getName());
-	
-	
-	// static block for Transaction logger initialization
-	static {
-		try {
-            // Create logs directory if it does not exist
-            Files.createDirectories(Paths.get("logs"));
-            
-			// specifies path to logs directory
-			Handler fileHandler = new FileHandler("logs/BankAccount.log", true);
-			fileHandler.setFormatter(new SimpleFormatter());
-			logger.addHandler(fileHandler);
-			logger.setLevel(Level.INFO);
-			
-			logger.setUseParentHandlers(false);
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
-		}
-	}
-	
-	// common method to log transactions
-	private void logTransaction(String action, double amount) {
-		String message = String.format("Account No: %d - %s: $%.2f, New Balance: $%.2f",
-				this.accNumber, action, amount, this.accBalance);
-		logger.log(Level.INFO, message);
-	}
-	
-	
-	
-	
+	// BankAccount DataLogger instance
+	private final DataLogger logger = new DataLogger(BankAccount.class.getName());
 	
 	// bankAccount fields
 	private int 	accNumber;
@@ -186,7 +145,7 @@ public class BankAccount {
 		String message = String.format("Account No: %d - Deposit: $%.2f. New Balance: $%.2f",
 				this.accNumber, amount, this.getBalance());
 		System.out.println(message + "\n");
-		logTransaction("Deposit", amount);
+		logger.logTransaction(this, "Deposit", amount);
 	}
 	
 	
@@ -198,7 +157,7 @@ public class BankAccount {
 	        String message = String.format("Account No: %d - Withdrawal: $%.2f. New Balance: $%.2f",
 	                this.accNumber, amount, this.getBalance());
 	        System.out.println(message + "\n");
-			logTransaction("Withdrawal", amount);
+			logger.logTransaction(this, "Withdrawal", amount);
 		}
 		else {
 			throw new IllegalWithdrawException("Insufficient funds. Current balance: $" + this.accBalance);
@@ -218,11 +177,11 @@ public class BankAccount {
 			String message = String.format("Account No: %d - Transfer: $%.2f to Account No: %d. New Balance $%.2f",
 					this.accNumber, amount, recipient.getAccNumber(), this.getBalance());
 			System.out.println(message + "\n");
-			logTransaction("Transfer", amount);
+			logger.logTransaction(this, "Transfer", amount);
 		}
 		else {
 			String errorMsg = String.format("Insufficient funds for transfer. Current balance: $%.2f", this.accBalance);
-			logger.log(Level.SEVERE, errorMsg);
+			logger.logTransaction(this, errorMsg, amount);
 			System.out.println("Transaction failed: Insufficient funds.\n");
 			throw new IllegalWithdrawException("Insufficient funds for transfer.");
 		}
