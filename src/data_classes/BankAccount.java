@@ -34,6 +34,8 @@ public class BankAccount {
 			fileHandler.setFormatter(new SimpleFormatter());
 			logger.addHandler(fileHandler);
 			logger.setLevel(Level.INFO);
+			
+			logger.setUseParentHandlers(false);
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
@@ -103,21 +105,34 @@ public class BankAccount {
 	}
 	
 	// string validation method
-	private static void validateString(String value) {
-		if(value == null || value.isBlank()) {
-			throw new StringValidationException("Invalid String: " + value);
+	private static void validateString(Object obj) {
+		if(obj instanceof String) {
+			String value = (String) obj;
+			if(value.isBlank()) {
+				throw new StringValidationException("Invalid String: Value is blank. ");
+			}
+		}
+		else {
+			throw new StringValidationException("Expected a String but got: " + obj.getClass().getName());
 		}
 	}
 	
 	// double validation method
-	private static void validateDouble(double number) {
-		if(number < 0) {
-			throw new DoubleValidationException("Invalid Double: " + number);
+	private static void validateDouble(Object obj) {
+		if(obj instanceof Double) {
+			double number = (double) obj;
+			if(number < 0) {
+				throw new DoubleValidationException("Invalid Double: " + number);
+			}
+		}
+		else {
+			throw new DoubleValidationException("Expected a Double but got: " + obj.getClass().getName());
 		}
 	}
 	
 	// minimim age validation method
 	private static void validateAge(Integer age) { 
+		validateInteger(age);
 		if(age < minimumAge) {
 			throw new AgeValidationException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
@@ -200,7 +215,7 @@ public class BankAccount {
 		if(this.accBalance >= amount) {
 			this.accBalance -= amount;
 			recipient.depositAmount(amount);
-			String message = String.format("Account No; %d - Transferred $%.2f to Account No: %d. New Balance $%.2f",
+			String message = String.format("Account No: %d - Transfer: $%.2f to Account No: %d. New Balance $%.2f",
 					this.accNumber, amount, recipient.getAccNumber(), this.getBalance());
 			System.out.println(message + "\n");
 			logTransaction("Transfer", amount);
