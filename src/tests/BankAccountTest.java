@@ -1,11 +1,7 @@
 package tests;
 
 import data_classes.BankAccount;
-import validation_classes.AgeValidationException;
-import validation_classes.DoubleValidationException;
 import validation_classes.IllegalWithdrawException;
-import validation_classes.IntegerValidationException;
-import validation_classes.StringValidationException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -55,7 +51,7 @@ class BankAccountTest {
 	
 	@Test
 	void testInvalidAccountNumber() {
-		assertThrows(IntegerValidationException.class, () ->
+		assertThrows(IllegalArgumentException.class, () ->
 		{
 			new BankAccount(-1, "Savings", "John", "Doe", 36, "123 Street", 1000.0);
 		});
@@ -63,7 +59,7 @@ class BankAccountTest {
 	
 	@Test
 	void testInvalidAccountType() {
-		assertThrows(StringValidationException.class, () -> 
+		assertThrows(IllegalArgumentException.class, () -> 
 		{
 			new BankAccount(12345, "", "John", "Doe", 36, "123 Street", 1000.0);
 		});
@@ -71,7 +67,7 @@ class BankAccountTest {
 	
 	@Test
 	void testInvalidAge() {
-		assertThrows(AgeValidationException.class, () -> 
+		assertThrows(IllegalArgumentException.class, () -> 
 		{
 			new BankAccount(12345, "Savings", "John", "Doe", 15, "123 Street", 1000.0);
 		});
@@ -85,7 +81,7 @@ class BankAccountTest {
 	
 	@Test
 	void testInvalidDeposit() {
-		assertThrows(DoubleValidationException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			account.depositAmount(-1.0);
 		});
 	}

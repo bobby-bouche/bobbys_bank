@@ -1,16 +1,12 @@
 package data_classes;
 
-import validation_classes.AgeValidationException;
-import validation_classes.DoubleValidationException;
 import validation_classes.IllegalWithdrawException;
-import validation_classes.IntegerValidationException;
-import validation_classes.StringValidationException;
 
 
 public class BankAccount {
 	
 	// BankAccount DataLogger instance
-	private final DataLogger logger = new DataLogger(BankAccount.class.getName());
+	private final DataLogger logger = new DataLogger(BankAccount.class.getName(), "BankAccount.log");
 	
 	// bankAccount fields
 	private int 	accNumber;
@@ -46,7 +42,10 @@ public class BankAccount {
 		this.accBalance = balance;
 	}
 
-	
+	/*
+	 * for validation methods, maybe it might be best to put methos in 
+	 * bank class then have bankaccount extend bank class to be able to access?
+	 */
 	
 	// validation methods
 	
@@ -55,11 +54,11 @@ public class BankAccount {
 		if(obj instanceof Integer) {
 			int number = (Integer) obj;
 			if(number < 0) {
-				throw new IntegerValidationException("Invalid Integer: " + number + ". Value must be must be more thn zero");
+				throw new IllegalArgumentException("Invalid Integer: " + number + ". Value must be must be more thn zero");
 			}
 		}
 		else {
-			throw new IntegerValidationException("Expected an Integer but got: " + obj.getClass().getName());
+			throw new IllegalArgumentException("Expected an Integer but got: " + obj.getClass().getName());
 		}
 	}
 	
@@ -68,11 +67,11 @@ public class BankAccount {
 		if(obj instanceof String) {
 			String value = (String) obj;
 			if(value.isBlank()) {
-				throw new StringValidationException("Invalid String: Value is blank. ");
+				throw new IllegalArgumentException("Invalid String: Value is blank. ");
 			}
 		}
 		else {
-			throw new StringValidationException("Expected a String but got: " + obj.getClass().getName());
+			throw new IllegalArgumentException("Expected a String but got: " + obj.getClass().getName());
 		}
 	}
 	
@@ -81,11 +80,11 @@ public class BankAccount {
 		if(obj instanceof Double) {
 			double number = (double) obj;
 			if(number < 0) {
-				throw new DoubleValidationException("Invalid Double: " + number);
+				throw new IllegalArgumentException("Invalid Double: " + number);
 			}
 		}
 		else {
-			throw new DoubleValidationException("Expected a Double but got: " + obj.getClass().getName());
+			throw new IllegalArgumentException("Expected a Double but got: " + obj.getClass().getName());
 		}
 	}
 	
@@ -93,12 +92,16 @@ public class BankAccount {
 	private static void validateAge(Integer age) { 
 		validateInteger(age);
 		if(age < minimumAge) {
-			throw new AgeValidationException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
+			throw new IllegalArgumentException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
 	}
 	
-	// BankAccount validation for object bankaccount need for transfer method
-		
+	// BankAccount validation method used for BankAccount object being passed in transfer method
+	private static void validateBankAccount(Object obj) {
+		if(!(obj instanceof BankAccount)) {
+			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
+		}
+	}
 	
 	// getters and setters
 	public int getAccNumber() {
@@ -140,7 +143,7 @@ public class BankAccount {
 	
 	// method to deposit amount
 	public void depositAmount(double amount) {
-		validateDouble(amount);
+		validateDouble(amount);	
 		this.accBalance += amount;
 		String message = String.format("Account No: %d - Deposit: $%.2f. New Balance: $%.2f",
 				this.accNumber, amount, this.getBalance());
@@ -151,7 +154,7 @@ public class BankAccount {
 	
 	// method to withraw amount
 	public void withdrawAmount(double amount) {
-		validateDouble(amount);;
+		validateDouble(amount);
 		if(this.accBalance - amount >= 0) {
 			this.accBalance -= amount;
 	        String message = String.format("Account No: %d - Withdrawal: $%.2f. New Balance: $%.2f",
@@ -167,23 +170,22 @@ public class BankAccount {
 	
 	// method to transfer amount
 	public void transferAmount(double amount, BankAccount recipient) {
-		
 		validateDouble(amount);
-		//validateBankAccount(account);
-	
+		validateBankAccount(recipient);	
 		if(this.accBalance >= amount) {
 			this.accBalance -= amount;
 			recipient.depositAmount(amount);
 			String message = String.format("Account No: %d - Transfer: $%.2f to Account No: %d. New Balance $%.2f",
 					this.accNumber, amount, recipient.getAccNumber(), this.getBalance());
 			System.out.println(message + "\n");
-			logger.logTransaction(this, "Transfer", amount);
+			logger.logTransaction(this, String.format("Transfer to %d", recipient.getAccNumber()), amount);
+
 		}
 		else {
 			String errorMsg = String.format("Insufficient funds for transfer. Current balance: $%.2f", this.accBalance);
 			logger.logTransaction(this, errorMsg, amount);
 			System.out.println("Transaction failed: Insufficient funds.\n");
-			throw new IllegalWithdrawException("Insufficient funds for transfer.");
+			throw new IllegalWithdrawException(errorMsg);
 		}
 	}
 	
@@ -192,8 +194,16 @@ public class BankAccount {
 	
 	@Override
 	public String toString() {
-		return "BankAccount [accNumber=" + accNumber + ", accType=" + accType + ", accBalance=" + accBalance
-				+ ", Fname=" + firstName + ", LName=" + lastName + ", age=" + age + ", address=" + address + "]";
+		return "\n\nAccount Information\n"
+				+ "----------------------------------------------------------------------\n"
+				+ "Account Number:    			" + accNumber 
+				+ "\nAccount Type:    			" + accType 
+				+ "\nLast Name:       			" + lastName 
+				+ "\nFirst Name:      			" + firstName
+				+ "\nAge:             			" + age 
+				+ "\nAddress:         			" + address
+				+ "\nBalance:         			" + accBalance + "\n"
+				+ "----------------------------------------------------------------------\n\n";
 	}
 	
 }

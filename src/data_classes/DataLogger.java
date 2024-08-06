@@ -13,11 +13,13 @@ public class DataLogger {
 	
 	// DataLogger fields
 	private final Logger logger;
+	private final String logFileName;
 	
 	
 	// constructor
-	public DataLogger(String className) {
+	public DataLogger(String className, String logFileName) {
 		logger = Logger.getLogger(className);
+		this.logFileName = logFileName;
 		initializeLogger();
 	}
 	
@@ -28,7 +30,7 @@ public class DataLogger {
             // Create logs directory if it does not exist
             Files.createDirectories(Paths.get("logs"));
 			// specifies path to logs directory
-			Handler fileHandler = new FileHandler("logs/BankAccount.log", true);
+			Handler fileHandler = new FileHandler("logs/" + logFileName, true);
 			fileHandler.setFormatter(new SimpleFormatter());
 			logger.addHandler(fileHandler);
 			logger.setLevel(Level.INFO);
