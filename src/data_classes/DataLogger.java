@@ -37,7 +37,7 @@ public class DataLogger {
 			logger.setUseParentHandlers(false);
 		}
 		catch(IOException e) {
-			logger.log(Level.SEVERE, "Failed to nitialize logger handler.", e);
+			logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
 		}
 	}
 

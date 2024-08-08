@@ -1,6 +1,8 @@
 package data_classes;
 
+
 import validation_classes.IllegalWithdrawException;
+import validation_classes.InputValidator;
 
 
 public class BankAccount {
@@ -27,29 +29,25 @@ public class BankAccount {
 		super();
 		validateInteger(accNum);
 		this.accNumber 	= accNum;
-		validateString(accType);
+		InputValidator.validateString(accType);
 		this.accType = accType;
-		validateString(firstName);
+		InputValidator.validateString(firstName);
 		this.firstName = firstName;
-		validateString(lastName);
+		InputValidator.validateString(lastName);
 		this.lastName = lastName;
 		validateInteger(age);
 		validateAge(age);
 		this.age = age;
-		validateString(address);
+		InputValidator.validateString(address);
 		this.address = address;
 		validateDouble(balance);
 		this.accBalance = balance;
 	}
 
-	/*
-	 * for validation methods, maybe it might be best to put methos in 
-	 * bank class then have bankaccount extend bank class to be able to access?
-	 */
 	
-	// validation methods
+	// class validation methods
 	
-	// intger validation method
+	// integer validation method
 	private static void validateInteger(Object obj) {
 		if(obj instanceof Integer) {
 			int number = (Integer) obj;
@@ -59,19 +57,6 @@ public class BankAccount {
 		}
 		else {
 			throw new IllegalArgumentException("Expected an Integer but got: " + obj.getClass().getName());
-		}
-	}
-	
-	// string validation method
-	private static void validateString(Object obj) {
-		if(obj instanceof String) {
-			String value = (String) obj;
-			if(value.isBlank()) {
-				throw new IllegalArgumentException("Invalid String: Value is blank. ");
-			}
-		}
-		else {
-			throw new IllegalArgumentException("Expected a String but got: " + obj.getClass().getName());
 		}
 	}
 	
@@ -88,7 +73,7 @@ public class BankAccount {
 		}
 	}
 	
-	// minimim age validation method
+	// minimum age validation method
 	private static void validateAge(Integer age) { 
 		validateInteger(age);
 		if(age < minimumAge) {
@@ -102,6 +87,8 @@ public class BankAccount {
 			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
 		}
 	}
+	
+	
 	
 	// getters and setters
 	public int getAccNumber() {
@@ -129,7 +116,7 @@ public class BankAccount {
 	}
 	
 	public void setNewAddress(String newAddress) {
-		validateString(newAddress);
+		InputValidator.validateString(newAddress);
 		this.address = newAddress;
 	}
 	
