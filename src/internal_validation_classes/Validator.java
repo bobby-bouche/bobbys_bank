@@ -1,6 +1,6 @@
-package validation_classes;
+package internal_validation_classes;
 
-public class InputValidator {
+public class Validator {
 	
 	// string validation method
 	public static void validateString(Object obj) {

@@ -3,8 +3,8 @@ package data_classes;
 import java.util.HashMap;
 import java.util.Map;
 
-import keyboard_classes.Keyboard;
-import validation_classes.InputValidator;
+import internal_validation_classes.Validator;
+import keyboard_class.Keyboard;
 
 public class Bank {
 	
@@ -16,9 +16,9 @@ public class Bank {
 	
 	// constructor
 	public Bank(String name) {
+		this.name = name;
 		accounts = new HashMap<>();
 		kb 		 = new Keyboard();
-		this.name = name;
 	}
 
 

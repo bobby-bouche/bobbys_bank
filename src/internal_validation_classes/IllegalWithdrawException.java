@@ -1,4 +1,4 @@
-package validation_classes;
+package internal_validation_classes;
 
 @SuppressWarnings("serial")
 public class IllegalWithdrawException extends IllegalArgumentException  {

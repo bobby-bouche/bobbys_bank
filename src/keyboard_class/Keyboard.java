@@ -1,4 +1,4 @@
-package keyboard_classes;
+package keyboard_class;
 
 public class Keyboard {
 

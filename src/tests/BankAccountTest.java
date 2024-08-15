@@ -1,7 +1,7 @@
 package tests;
 
 import data_classes.BankAccount;
-import validation_classes.IllegalWithdrawException;
+import internal_validation_classes.IllegalWithdrawException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

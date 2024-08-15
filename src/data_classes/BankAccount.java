@@ -1,8 +1,8 @@
 package data_classes;
 
 
-import validation_classes.IllegalWithdrawException;
-import validation_classes.InputValidator;
+import internal_validation_classes.IllegalWithdrawException;
+import internal_validation_classes.Validator;
 
 
 public class BankAccount {
@@ -21,7 +21,14 @@ public class BankAccount {
 	
 	
 	// symbolic constants
-	final static Integer minimumAge = 16;
+	private static Integer MINIMUM_AGE;
+	private static Double DEFAULT_BALANCE;
+	
+	// initialization block
+	{
+		MINIMUM_AGE		 = 16;
+		DEFAULT_BALANCE  = 0.0;
+	}
 	
 	
 	// constructor
@@ -29,19 +36,23 @@ public class BankAccount {
 		super();
 		validateInteger(accNum);
 		this.accNumber 	= accNum;
-		InputValidator.validateString(accType);
+		Validator.validateString(accType);
 		this.accType = accType;
-		InputValidator.validateString(firstName);
+		Validator.validateString(firstName);
 		this.firstName = firstName;
-		InputValidator.validateString(lastName);
+		Validator.validateString(lastName);
 		this.lastName = lastName;
 		validateInteger(age);
 		validateAge(age);
 		this.age = age;
-		InputValidator.validateString(address);
+		Validator.validateString(address);
 		this.address = address;
 		validateDouble(balance);
 		this.accBalance = balance;
+	}
+	
+	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address) {
+		this(accNum, accType, firstName, lastName, age, address, DEFAULT_BALANCE);
 	}
 
 	
@@ -76,7 +87,7 @@ public class BankAccount {
 	// minimum age validation method
 	private static void validateAge(Integer age) { 
 		validateInteger(age);
-		if(age < minimumAge) {
+		if(age < MINIMUM_AGE) {
 			throw new IllegalArgumentException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
 	}
@@ -116,7 +127,7 @@ public class BankAccount {
 	}
 	
 	public void setNewAddress(String newAddress) {
-		InputValidator.validateString(newAddress);
+		Validator.validateString(newAddress);
 		this.address = newAddress;
 	}
 	
