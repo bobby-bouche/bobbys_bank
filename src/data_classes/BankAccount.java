@@ -19,6 +19,9 @@ public class BankAccount {
 	private int 	age;
 	private String 	address;
 	
+	// bank that this instance of BankAccount belongs to. 
+	private Bank bank;
+	
 	
 	// symbolic constants
 	private static Integer MINIMUM_AGE;
@@ -32,9 +35,9 @@ public class BankAccount {
 	
 	
 	// constructor
-	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, double balance) {
+	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, double balance, Bank bank) {
 		super();
-		validateInteger(accNum);
+		Validator.validateInteger(accNum);
 		this.accNumber 	= accNum;
 		Validator.validateString(accType);
 		this.accType = accType;
@@ -42,51 +45,28 @@ public class BankAccount {
 		this.firstName = firstName;
 		Validator.validateString(lastName);
 		this.lastName = lastName;
-		validateInteger(age);
+		Validator.validateInteger(age);
 		validateAge(age);
 		this.age = age;
 		Validator.validateString(address);
 		this.address = address;
-		validateDouble(balance);
+		Validator.validateDouble(balance);
 		this.accBalance = balance;
+		validateBank(bank);
+		this.bank = bank;
+		bank.addAccount(this);
 	}
 	
-	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address) {
-		this(accNum, accType, firstName, lastName, age, address, DEFAULT_BALANCE);
+	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, Bank bank) {
+		this(accNum, accType, firstName, lastName, age, address, DEFAULT_BALANCE, bank);
 	}
 
 	
-	// class validation methods
-	
-	// integer validation method
-	private static void validateInteger(Object obj) {
-		if(obj instanceof Integer) {
-			int number = (Integer) obj;
-			if(number < 0) {
-				throw new IllegalArgumentException("Invalid Integer: " + number + ". Value must be must be more thn zero");
-			}
-		}
-		else {
-			throw new IllegalArgumentException("Expected an Integer but got: " + obj.getClass().getName());
-		}
-	}
-	
-	// double validation method
-	private static void validateDouble(Object obj) {
-		if(obj instanceof Double) {
-			double number = (double) obj;
-			if(number < 0) {
-				throw new IllegalArgumentException("Invalid Double: " + number);
-			}
-		}
-		else {
-			throw new IllegalArgumentException("Expected a Double but got: " + obj.getClass().getName());
-		}
-	}
+	// BankAccount validation methods
 	
 	// minimum age validation method
 	private static void validateAge(Integer age) { 
-		validateInteger(age);
+		Validator.validateInteger(age);
 		if(age < MINIMUM_AGE) {
 			throw new IllegalArgumentException("Invalid age: " + age + ". You must bo over 16 to open an account with us.");
 		}
@@ -96,6 +76,13 @@ public class BankAccount {
 	private static void validateBankAccount(Object obj) {
 		if(!(obj instanceof BankAccount)) {
 			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
+		}
+	}
+	
+	// Bank validation method
+	private static void validateBank(Object obj) {
+		if(!(obj instanceof Bank)) {
+			throw new IllegalArgumentException("Expected a Bank object but got: " + obj.getClass().getName());
 		}
 	}
 	
@@ -135,13 +122,17 @@ public class BankAccount {
 		return this.accBalance;
 	}
 	
+	public Bank getBank() {
+		return bank;
+	}
+	
 	
 	
 	// Transaction methods
 	
 	// method to deposit amount
 	public void depositAmount(double amount) {
-		validateDouble(amount);	
+		Validator.validateDouble(amount);	
 		this.accBalance += amount;
 		String message = String.format("Account No: %d - Deposit: $%.2f. New Balance: $%.2f",
 				this.accNumber, amount, this.getBalance());
@@ -152,7 +143,7 @@ public class BankAccount {
 	
 	// method to withraw amount
 	public void withdrawAmount(double amount) {
-		validateDouble(amount);
+		Validator.validateDouble(amount);
 		if(this.accBalance - amount >= 0) {
 			this.accBalance -= amount;
 	        String message = String.format("Account No: %d - Withdrawal: $%.2f. New Balance: $%.2f",
@@ -168,7 +159,7 @@ public class BankAccount {
 	
 	// method to transfer amount
 	public void transferAmount(double amount, BankAccount recipient) {
-		validateDouble(amount);
+		Validator.validateDouble(amount);
 		validateBankAccount(recipient);	
 		if(this.accBalance >= amount) {
 			this.accBalance -= amount;
@@ -203,5 +194,6 @@ public class BankAccount {
 				+ "\nBalance:         			" + accBalance + "\n"
 				+ "----------------------------------------------------------------------\n\n";
 	}
+
 	
 }

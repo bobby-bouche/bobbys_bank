@@ -9,7 +9,7 @@ import keyboard_class.Keyboard;
 public class Bank {
 	
 	// bank fields
-	private Map<String, BankAccount> accounts;
+	private Map<Integer, BankAccount> accounts;
 	private String name;
 	private Keyboard kb;
 	
@@ -30,6 +30,14 @@ public class Bank {
 	
 	
 	// method to open new account
+	
+	
+	// method to add account to accounts 
+	public void addAccount(BankAccount account) {
+		// TODO validateAccount();
+		this.accounts.put(account.getAccNumber(), account);
+		
+	}
 	
 	
 	// method to delete account
