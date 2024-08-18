@@ -4,22 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class DataLogger {
 	
-	// DataLogger fields
 	private final Logger logger;
 	private final String logFileName;
+	private FileHandler fileHandler;
 	
 	
 	// constructor
-	public DataLogger(String className, String logFileName) {
-		logger = Logger.getLogger(className);
-		this.logFileName = logFileName;
+	public DataLogger(int accountNumber) {
+		logger = Logger.getLogger("BankAccountLogger");
+		this.logFileName = "logs/Account_" + accountNumber + ".log";
 		initializeLogger();
 	}
 	
@@ -30,7 +29,7 @@ public class DataLogger {
             // Create logs directory if it does not exist
             Files.createDirectories(Paths.get("logs"));
 			// specifies path to logs directory
-			Handler fileHandler = new FileHandler("logs/" + logFileName, true);
+			fileHandler = new FileHandler(logFileName, true);
 			fileHandler.setFormatter(new SimpleFormatter());
 			logger.addHandler(fileHandler);
 			logger.setLevel(Level.INFO);
@@ -47,6 +46,14 @@ public class DataLogger {
 		String message = String.format("Account No: %d - %s: $%.2f, New Balance: $%.2f",
 				account.getAccNumber(), action, amount, account.getBalance());
 		logger.log(Level.INFO, message);
+	}
+	
+	
+	// close the logger 
+	public void close() {
+		if(fileHandler != null) {
+			fileHandler.close();
+		}
 	}
 
 }

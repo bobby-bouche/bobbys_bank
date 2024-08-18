@@ -37,6 +37,10 @@ class BankAccountTest {
 
 	@AfterEach
 	void tearDown() throws Exception {
+        // Close the logger after each test
+        if (account != null) {
+            account.close();
+        }
 		System.out.println("Test Over...");
 	}
 
@@ -113,7 +117,7 @@ class BankAccountTest {
 	
 	@Test
 	void testInvalidTransfer() {
-		BankAccount anotherAccount = new BankAccount(111009, "Savings", "Jane", "Doe", 23, "123 Street", 1000.0, bank);
+		BankAccount anotherAccount = new BankAccount(111008, "Savings", "Jane", "Doe", 23, "123 Street", 1000.0, bank);
 		assertThrows(IllegalWithdrawException.class, () -> 
 		{
 			account.transferAmount(2000.0, anotherAccount);

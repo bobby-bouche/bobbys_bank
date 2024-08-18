@@ -7,9 +7,6 @@ import internal_validation_classes.Validator;
 
 public class BankAccount {
 	
-	// BankAccount DataLogger instance
-	private final DataLogger logger = new DataLogger(BankAccount.class.getName(), "BankAccount.log");
-	
 	// bankAccount fields
 	private int 	accNumber;
 	private String 	accType;
@@ -21,6 +18,9 @@ public class BankAccount {
 	
 	// bank that this instance of BankAccount belongs to. 
 	private Bank bank;
+	
+	// BankAccount DataLogger instance
+	private DataLogger logger;
 	
 	
 	// symbolic constants
@@ -55,6 +55,7 @@ public class BankAccount {
 		validateBank(bank);
 		this.bank = bank;
 		bank.addAccount(this);
+		this.logger = new DataLogger(accNumber); // initialize a dataLogger for this specific account
 	}
 	
 	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, Bank bank) {
@@ -126,6 +127,10 @@ public class BankAccount {
 		return bank;
 	}
 	
+    // Getter for logger (if needed for tests)
+    public DataLogger getLogger() {
+        return logger;
+    }
 	
 	
 	// Transaction methods
@@ -178,6 +183,11 @@ public class BankAccount {
 		}
 	}
 	
+	
+    // Close logger when account is closed
+    public void close() {
+        logger.close();
+    }
 	
 	// toString method
 	

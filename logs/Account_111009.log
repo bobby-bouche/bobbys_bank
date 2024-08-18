@@ -1,0 +1,4 @@
+Aug. 17, 2024 11:19:28 P.M. data_classes.DataLogger logTransaction
+INFO: Account No: 111009 - Deposit: $500.00, New Balance: $1500.00
+Aug. 17, 2024 11:19:28 P.M. data_classes.DataLogger logTransaction
+INFO: Account No: 12345 - Transfer to 111009: $500.00, New Balance: $500.00
