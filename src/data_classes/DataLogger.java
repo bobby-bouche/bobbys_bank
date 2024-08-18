@@ -11,34 +11,41 @@ import java.util.logging.SimpleFormatter;
 public class DataLogger {
 	
 	private final Logger logger;
-	private final String logFileName;
 	private FileHandler fileHandler;
 	
 	
-	// constructor
+	// Constructor
+	@SuppressWarnings("unused")
 	public DataLogger(int accountNumber) {
-		logger = Logger.getLogger("BankAccountLogger");
-		this.logFileName = "logs/Account_" + accountNumber + ".log";
-		initializeLogger();
+	    logger = Logger.getLogger("BankAccountLogger_" + accountNumber);
+	    String logFileName = "logs/Account_" + accountNumber + ".log";
+	    FileHandler tempFileHandler = null;
+
+	    try {
+	        // Create logs directory if it does not exist
+	        Files.createDirectories(Paths.get("logs"));
+
+	        // Specify path to logs directory
+	        tempFileHandler = new FileHandler(logFileName, true);
+	        tempFileHandler.setFormatter(new SimpleFormatter());
+
+	        // Add handler and configure logger
+	        logger.addHandler(tempFileHandler);
+	        logger.setLevel(Level.INFO);
+	        logger.setUseParentHandlers(false); // Disable console logging
+
+	    } catch (IOException e) {
+	        // Ensure that tempFileHandler is closed if it was created
+	        if (tempFileHandler != null) {
+	            tempFileHandler.close();
+	        }
+	        logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
+	    }
+
+	    // Assign the initialized fileHandler to the field
+	    this.fileHandler = tempFileHandler;
 	}
-	
-	
-	// method to initialize logger
-	private void initializeLogger() {
-		try {
-            // Create logs directory if it does not exist
-            Files.createDirectories(Paths.get("logs"));
-			// specifies path to logs directory
-			fileHandler = new FileHandler(logFileName, true);
-			fileHandler.setFormatter(new SimpleFormatter());
-			logger.addHandler(fileHandler);
-			logger.setLevel(Level.INFO);
-			logger.setUseParentHandlers(false);
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, "Failed to initialize logger handler.", e);
-		}
-	}
+
 
 	
 	// method to log BankAccount transactions

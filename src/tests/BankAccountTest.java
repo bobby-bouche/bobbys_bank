@@ -120,7 +120,7 @@ class BankAccountTest {
 		BankAccount anotherAccount = new BankAccount(111008, "Savings", "Jane", "Doe", 23, "123 Street", 1000.0, bank);
 		assertThrows(IllegalWithdrawException.class, () -> 
 		{
-			account.transferAmount(2000.0, anotherAccount);
+			account.transferAmount(5000.0, anotherAccount);
 		});
 	}
 

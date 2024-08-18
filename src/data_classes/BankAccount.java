@@ -176,7 +176,7 @@ public class BankAccount {
 
 		}
 		else {
-			String errorMsg = String.format("Insufficient funds for transfer. Current balance: $%.2f", this.accBalance);
+			String errorMsg = String.format("Insufficient funds for transfer to recipient: %d Current balance: $%.2f. Transfer amount", recipient.getAccNumber(), this.accBalance);
 			logger.logTransaction(this, errorMsg, amount);
 			System.out.println("Transaction failed: Insufficient funds.\n");
 			throw new IllegalWithdrawException(errorMsg);
