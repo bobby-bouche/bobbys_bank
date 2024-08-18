@@ -1,5 +1,29 @@
-package data_classes;
+/**
+ * The BankAccount class represents an individual bank account in the system.
+ * Each account has associated fields such as account number, account type, 
+ * balance, and owner information (e.g., first name, last name, age, address).
+ * 
+ * The class handles transactions like deposits, withdrawals, and transfers, 
+ * while also ensuring that all data conforms to specified business rules through 
+ * the use of validation methods. It also maintains a log of transactions using 
+ * the DataLogger class.
+ * 
+ * Usage Example:
+ * BankAccount account = new BankAccount(12345, "Checking", "John", "Doe", 30, "123 Elm St", 100.0, bank);
+ * account.depositAmount(50.0);
+ * 
+ * Responsibilities:
+ * - Store and manage account-specific information.
+ * - Perform transactions (deposit, withdraw, transfer) with validation.
+ * - Enforce business rules on account creation and transactions.
+ * - Log all transactions for auditing and record-keeping.
+ * - Ensure account data integrity through validations and exception handling.
+ * 
+ * This class interacts with the Validator class to ensure that fields like account 
+ * number, age, and balance meet the necessary criteria before they are set or updated.
+ */
 
+package data_classes;
 
 import internal_validation_classes.IllegalWithdrawException;
 import internal_validation_classes.Validator;
@@ -65,7 +89,15 @@ public class BankAccount {
 	
 	// BankAccount validation methods
 	
-	// minimum age validation method
+	/**
+	 * Validates the age of the account holder to ensure it meets the minimum required age.
+	 * This method checks if the provided age is an integer and if it is greater than 
+	 * or equal to the specified minimum age. If the age is invalid, it throws an 
+	 * IllegalArgumentException.
+	 * 
+	 * @param age The age of the account holder to validate.
+	 * @throws IllegalArgumentException if the age is less than the required minimum age.
+	 */
 	private static void validateAge(Integer age) { 
 		Validator.validateInteger(age);
 		if(age < MINIMUM_AGE) {
@@ -73,14 +105,28 @@ public class BankAccount {
 		}
 	}
 	
-	// BankAccount validation method used for BankAccount object being passed in transfer method
+	/**
+	 * Validates that the provided object is an instance of BankAccount.
+	 * This method ensures that the object passed to it is of type BankAccount. 
+	 * If the object is not a BankAccount instance, an IllegalArgumentException is thrown.
+	 * 
+	 * @param obj The object to validate.
+	 * @throws IllegalArgumentException if the object is not an instance of BankAccount.
+	 */
 	private static void validateBankAccount(Object obj) {
 		if(!(obj instanceof BankAccount)) {
 			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
 		}
 	}
 	
-	// Bank validation method
+	/**
+	 * Validates that the provided object is an instance of Bank.
+	 * This method ensures that the object passed to it is of type Bank. 
+	 * If the object is not a Bank instance, an IllegalArgumentException is thrown.
+	 * 
+	 * @param obj The object to validate.
+	 * @throws IllegalArgumentException if the object is not an instance of Bank.
+	 */
 	private static void validateBank(Object obj) {
 		if(!(obj instanceof Bank)) {
 			throw new IllegalArgumentException("Expected a Bank object but got: " + obj.getClass().getName());
@@ -90,39 +136,91 @@ public class BankAccount {
 	
 	
 	// getters and setters
+	
+	/**
+	 * Gets the account number.
+	 *
+	 * @return the account number of this BankAccount.
+	 */
 	public int getAccNumber() {
 		return this.accNumber;
 	}
 	
+	/**
+	 * Gets the account type.
+	 *
+	 * @return the account type of this BankAccount (e.g., Savings, Checking).
+	 */
 	public String getAccType() {
 		return this.accType;
 	}
 	
+	/**
+	 * Gets the first name of the account holder.
+	 *
+	 * @return the first name of the account holder.
+	 */
 	public String getFirstName() {
 		return this.firstName;
 	}
 	
+	/**
+	 * Gets the last name of the account holder.
+	 *
+	 * @return the last name of the account holder.
+	 */
 	public String getLastName() {
 		return this.lastName;
 	}
 	
+	/**
+	 * Gets the age of the account holder.
+	 *
+	 * @return the age of the account holder.
+	 */
 	public int getAge() {
 		return this.age;
 	}
 	
+	/**
+	 * Gets the address of the account holder.
+	 *
+	 * @return the address of the account holder.
+	 */
 	public String getAddress() {
 		return this.address;
 	}
 	
+	/**
+	 * Updates the address of the account holder.
+	 * 
+	 * This method allows you to set a new address for the account holder. 
+	 * Before updating, it validates that the new address is a non-empty string. 
+	 * If the validation passes, the address is updated; otherwise, an 
+	 * IllegalArgumentException is thrown.
+	 *
+	 * @param newAddress The new address to be set for the account holder.
+	 * @throws IllegalArgumentException if the new address is an empty or blank string.
+	 */
 	public void setNewAddress(String newAddress) {
 		Validator.validateString(newAddress);
 		this.address = newAddress;
 	}
 	
+	/**
+	 * Gets the current balance of the account.
+	 *
+	 * @return the current balance of this BankAccount.
+	 */
 	public double getBalance() {
 		return this.accBalance;
 	}
 	
+	/**
+	 * Gets the Bank that the account belongs to.
+	 *
+	 * @return the Bank of this BankAccount.
+	 */
 	public Bank getBank() {
 		return bank;
 	}
@@ -134,8 +232,13 @@ public class BankAccount {
 	
 	
 	// Transaction methods
-	
-	// method to deposit amount
+    
+    /**
+     * Deposits the specified amount into the account.
+     *
+     * @param amount the amount to deposit, must be greater than zero.
+     * @throws IllegalArgumentException if the amount is less than or equal to zero.
+     */
 	public void depositAmount(double amount) {
 		Validator.validateDouble(amount);	
 		this.accBalance += amount;
@@ -146,7 +249,12 @@ public class BankAccount {
 	}
 	
 	
-	// method to withraw amount
+	/**
+	 * Withdraws the specified amount from the account.
+	 *
+	 * @param amount the amount to withdraw, must be greater than zero and less than or equal to the current balance.
+	 * @throws IllegalWithdrawException if the withdrawal amount exceeds the current balance.
+	 */
 	public void withdrawAmount(double amount) {
 		Validator.validateDouble(amount);
 		if(this.accBalance - amount >= 0) {
@@ -162,7 +270,13 @@ public class BankAccount {
 	}
 	
 	
-	// method to transfer amount
+	/**
+	 * Transfers the specified amount from this account to another account.
+	 *
+	 * @param amount the amount to transfer, must be greater than zero and less than or equal to the current balance.
+	 * @param targetAccount the BankAccount to which the amount will be transferred.
+	 * @throws IllegalWithdrawException if the transfer amount exceeds the current balance.
+	 */
 	public void transferAmount(double amount, BankAccount recipient) {
 		Validator.validateDouble(amount);
 		validateBankAccount(recipient);	
@@ -184,13 +298,24 @@ public class BankAccount {
 	}
 	
 	
-    // Close logger when account is closed
+	/**
+	 * Closes the account and performs any necessary cleanup, such as closing log files.
+	 * This method should be called when the account is no longer needed.
+	 */
     public void close() {
         logger.close();
     }
 	
-	// toString method
-	
+    
+    /**
+     * Returns a string representation of the BankAccount object.
+     * 
+     * This method provides a detailed summary of the account's information, including the 
+     * account number, account type, holder's name, age, address, and current balance. The 
+     * output is formatted for easy readability, with each field clearly labeled.
+     *
+     * @return a formatted string that represents the account's information.
+     */
 	@Override
 	public String toString() {
 		return "\n\nAccount Information\n"
