@@ -28,11 +28,14 @@ public class Keyboard {
 	private static Scanner input;
 	
 	
-	// constructor
+	/**
+	 * Constructor for the Keyboard class.
+	 * 
+	 * Initializes the Scanner object to read input from the console.
+	 */
 	public Keyboard() {
 		input = new Scanner(System.in);
 	}
-	
 	
 	
 	/**
@@ -69,7 +72,22 @@ public class Keyboard {
 	}
 	
 	
-	// overloaded method to validate input from user with a high/low limit the integer
+	/**
+	 * Prompts the user for integer input within a specified range, validates the input, 
+	 * and returns the valid integer.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid integer within the specified range is entered. If the user enters an 
+	 * invalid integer (i.e., the input cannot be parsed as an integer or is outside the range), 
+	 * the method displays an error message and prompts the user to try again. The method returns 
+	 * the valid integer once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid integer or is out of range.
+	 * @param low the lower bound of the valid range (inclusive).
+	 * @param high the upper bound of the valid range (inclusive).
+	 * @return the integer value entered by the user within the specified range.
+	 */
 	public int readInteger(String promptMsg, String errorMsg, int low, int high) {
 		
 		int num = 0;
@@ -99,7 +117,20 @@ public class Keyboard {
 	}
 	
 	
-	// method to validate accout number from user
+	/**
+	 * Prompts the user for an account number, validates the input, and returns the valid account number.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid account number is entered. A valid account number is one that is at least
+	 * 4 digits long and greater than 1000. If the user enters an invalid account number (i.e., 
+	 * the input cannot be parsed as an integer or does not meet the criteria), the method displays 
+	 * an error message and prompts the user to try again. The method returns the valid account number 
+	 * once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid account number.
+	 * @return the account number entered by the user.
+	 */
 	public int readAccountNumber(String promptMsg, String errorMsg) {
 		
 		int num = 0;
@@ -127,7 +158,19 @@ public class Keyboard {
 	}
 	
 	
-	// method to validate string from user
+	/**
+	 * Prompts the user for string input, validates the input, and returns the valid string.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid string is entered. A valid string is one that is not null or blank. 
+	 * If the user enters an invalid string (i.e., the input is null or blank), the method 
+	 * displays an error message and prompts the user to try again. The method returns the 
+	 * valid string once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid string.
+	 * @return the string entered by the user.
+	 */
 	public String readString(String promptMsg, String errorMsg) {
 		
 		String strInput = null;
@@ -149,7 +192,19 @@ public class Keyboard {
 	}
 	
 	
-	// method to validate account type from user
+	/**
+	 * Prompts the user for an account type, validates the input, and returns the valid account type.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid account type is entered. A valid account type is either "savings" or 
+	 * "checking", case insensitive. If the user enters an invalid account type, the method 
+	 * displays an error message and prompts the user to try again. The method returns the 
+	 * valid account type once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid account type.
+	 * @return the account type entered by the user ("savings" or "checking").
+	 */
 	public String readAccountType(String promptMsg, String errorMsg) {
 		
 		String strInput = null;
