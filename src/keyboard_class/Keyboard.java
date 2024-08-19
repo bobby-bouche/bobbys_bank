@@ -69,8 +69,106 @@ public class Keyboard {
 	}
 	
 	
+	// overloaded method to validate input from user with a high/low limit the integer
+	public int readInteger(String promptMsg, String errorMsg, int low, int high) {
+		
+		int num = 0;
+		String strInput;
+		boolean valid = false;
+		
+		while(!valid) {
+			
+			System.out.println(promptMsg);
+			input.nextLine();
+			strInput = input.nextLine();
+			
+			try {
+				num = Integer.parseInt(strInput);
+				if(num >= low && num <= high) {
+					valid = true;
+				}
+				else {
+					System.out.println(errorMsg);
+				}
+			}
+			catch(NumberFormatException e) {
+				System.out.println();
+			}
+		}
+		return num;
+	}
 	
 	
+	// method to validate accout number from user
+	public int readAccountNumber(String promptMsg, String errorMsg) {
+		
+		int num = 0;
+		String strInput;
+		boolean valid = false;
+		
+		while(!valid) {
+			
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			
+			try {
+				if(strInput.length() >= 4) {
+					num = Integer.parseInt(strInput);
+					if(num > 1000) {
+						valid = true;
+					}
+				}
+			}
+			catch(NumberFormatException e) {
+				System.out.println(errorMsg);
+			}
+		}
+		return num;
+	}
+	
+	
+	// method to validate string from user
+	public String readString(String promptMsg, String errorMsg) {
+		
+		String strInput = null;
+		boolean valid = false;
+		
+		while(!valid) { 
+			
+			System.out.println(promptMsg);
+			strInput = input.nextLine();	
+
+			if(!(strInput == null) && !strInput.isBlank()) {
+				valid = true;
+			}
+			else {
+				System.out.println(errorMsg);
+			}
+		}
+		return strInput;
+	}
+	
+	
+	// method to validate account type from user
+	public String readAccountType(String promptMsg, String errorMsg) {
+		
+		String strInput = null;
+		boolean valid = false;
+		
+		while(!valid){
+			
+			System.out.println(promptMsg);
+			strInput = input.nextLine();	
+			
+			if(strInput.equalsIgnoreCase("savings") || strInput.equalsIgnoreCase("checking")) {
+				valid = true;
+			}
+			else {
+				System.out.println(errorMsg);
+			}
+		}
+		return strInput;
+	}
 	
 
 }
