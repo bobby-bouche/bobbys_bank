@@ -85,10 +85,14 @@ public class BankAccount {
 	public BankAccount(final int accNum, final String accType, final String firstName, final String lastName, final  int age, String address, Bank bank) {
 		this(accNum, accType, firstName, lastName, age, address, DEFAULT_BALANCE, bank);
 	}
+	
+	public BankAccount() {
+		super();
+	}
 
 	
 	// BankAccount validation methods
-	
+
 	/**
 	 * Validates the age of the account holder to ensure it meets the minimum required age.
 	 * This method checks if the provided age is an integer and if it is greater than 
@@ -229,6 +233,41 @@ public class BankAccount {
     public DataLogger getLogger() {
         return logger;
     }
+    
+	public void setAccNumber(int accNumber) {
+		this.accNumber = accNumber;
+	}
+
+	public void setAccType(String accType) {
+		Validator.validateString(accType);
+		this.accType = accType;
+	}
+
+	public void setAccBalance(double accBalance) {
+		Validator.validateDouble(accBalance);
+		this.accBalance = accBalance;
+	}
+
+	public void setFirstName(String firstName) {
+		Validator.validateString(firstName);
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		Validator.validateString(lastName);
+		this.lastName = lastName;
+	}
+
+	public void setAge(int age) {
+		Validator.validateInteger(age);
+		validateAge(age);
+		this.age = age;
+	}
+
+	public void setBank(Bank bank) {
+		validateBank(bank);
+		this.bank = bank;
+	}
 	
 	
 	// Transaction methods

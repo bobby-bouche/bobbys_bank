@@ -116,6 +116,27 @@ public class Keyboard {
 		return num;
 	}
 	
+	public Double readDouble(String promptMsg, String errorMsg) {
+		
+		Double num = 0.0;
+		String strInput;
+		boolean valid = false;
+		
+		while(valid == false) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			
+			try {
+				num = Double.parseDouble(strInput);
+				valid = true;
+			}
+			catch(NumberFormatException e) {
+				System.out.println(errorMsg);
+			}
+		}
+		return num;
+	}
+	
 	
 	/**
 	 * Prompts the user for an account number, validates the input, and returns the valid account number.

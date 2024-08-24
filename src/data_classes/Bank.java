@@ -66,6 +66,50 @@ public class Bank {
 	
 	
 	// TODO method to open new account
+	public void openNewAccount() {
+		
+		BankAccount account = new BankAccount();
+		String errorMsg = "Error, please try again.\n";
+		
+		//accType, FName, LName, age, address, balance, bank
+		
+		String accType;
+		String accTypePromptMsg = "Enter account type - 'checking' or 'savings':\n";
+		accType = kb.readAccountType(accTypePromptMsg, errorMsg); // this should be just readString, let BankAccount validate for savings/checking
+		account.setAccType(accType);
+		
+		String fName;
+		String fNamePromptMsg = "Enter first name: \n";
+		fName = kb.readString(fNamePromptMsg, errorMsg);
+		account.setFirstName(fName);
+		
+		String lName;
+		String lNamePromptMsg = "Enter last name: \n";
+		lName = kb.readString(lNamePromptMsg, errorMsg);
+		account.setLastName(lName);
+		
+		int age;
+		String agePromptMsg = "Enter age: \n";
+		age = kb.readInteger(agePromptMsg, errorMsg);
+		account.setAge(age);
+		
+		String address;
+		String addressPromptMsg = "Enter address: \n";
+		address = kb.readString(addressPromptMsg, errorMsg);
+		account.setNewAddress(address);
+		
+		Double balance;
+		String balancePromptMsg = "Enter balance: \n";
+		balance = kb.readDouble(balancePromptMsg, errorMsg);
+		account.setAccBalance(balance);
+		
+		account.setBank(this);
+		
+		try {
+			
+		}
+		
+	}
 	
 	
 	/**
