@@ -25,8 +25,13 @@
 
 package data_classes;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Map;
+
+import internal_validation_classes.Validator;
 import keyboard_class.Keyboard;
 
 
@@ -39,36 +44,38 @@ public class Bank {
 	
 	
 	// constructor
+	
 	public Bank(String name) {
+		Validator.validateString(name);
 		this.name = name;
 		accounts = new HashMap<>();
 		kb 		 = new Keyboard();
 	}
 
-
-	// class validation methods
+	
+	// validation methods
 	
 	/**
-	 * Validates that the provided object is an instance of the BankAccount class.
+	 * Validates that the provided object is an instance of BankAccount.
+	 * This method ensures that the object passed to it is of type BankAccount. 
+	 * If the object is not a BankAccount instance, an IllegalArgumentException is thrown.
 	 * 
-	 * This method ensures that the object passed is of the correct type (BankAccount). 
-	 * If the object is not a BankAccount, an IllegalArgumentException is thrown.
-	 *
-	 * @param obj the object to validate.
+	 * @param obj The object to validate.
 	 * @throws IllegalArgumentException if the object is not an instance of BankAccount.
 	 */
-	private static void validateAccount(Object obj) {
+	public static void validateBankAccount(Object obj) {
 		if(!(obj instanceof BankAccount)) {
-			throw new IllegalArgumentException("Expected a BankAccount object but got: " + obj.getClass().getName());
+			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
 		}
 	}
 	
+	// TODO validate bankName business rule, < 20 ?
 	
 	
 	// TODO method to open new account
 	public void openNewAccount() {
 		
-		BankAccount account = new BankAccount();
+		BankAccount account = new BankAccount(this);
 		String errorMsg = "Error, please try again.\n";
 		
 		//accType, FName, LName, age, address, balance, bank
@@ -101,13 +108,16 @@ public class Bank {
 		Double balance;
 		String balancePromptMsg = "Enter balance: \n";
 		balance = kb.readDouble(balancePromptMsg, errorMsg);
-		account.setAccBalance(balance);
+		account.setBalance(balance);
 		
-		account.setBank(this);
-		
-		try {
-			
-		}
+//		try {
+//			
+//			Class.forName("com.mysql.cy.jdbc.Driver");
+//			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bobby's_bank", "root", "Ronalde");
+//			
+//			PreparedStatement stat1 = con.prepareStatement("");
+//		}
+
 		
 	}
 	
@@ -125,7 +135,7 @@ public class Bank {
 	 * @throws IllegalArgumentException if the account number already exists in the bank.
 	 */
 	public void addAccount(BankAccount account) {
-		validateAccount(account);
+		validateBankAccount(account);
 		if(!this.accounts.containsKey(account.getAccNumber())) {
 			this.accounts.put(account.getAccNumber(), account);
 		}
@@ -147,7 +157,7 @@ public class Bank {
 	 * @throws IllegalArgumentException if the account does not exist in the bank.
 	 */
 	public void removeAccount(BankAccount account) {
-		validateAccount(account);
+		validateBankAccount(account);
 		if(!this.accounts.containsKey(account.getAccNumber())) {
 			this.accounts.remove(account.getAccNumber());
 		}

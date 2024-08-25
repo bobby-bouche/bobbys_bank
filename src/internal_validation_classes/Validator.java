@@ -43,6 +43,7 @@ public class Validator {
 		}
 	}
 	
+	
     /**
      * Validates that the provided object is a non-negative integer.
      * 
@@ -53,13 +54,14 @@ public class Validator {
 		if(obj instanceof Integer) {
 			int number = (Integer) obj;
 			if(number < 0) {
-				throw new IllegalArgumentException("Invalid Integer: " + number + ". Value must be must be more thn zero");
+				throw new IllegalArgumentException("Invalid Integer: " + number + ". Value must be must be more than zero");
 			}
 		}
 		else {
 			throw new IllegalArgumentException("Expected an Integer but got: " + obj.getClass().getName());
 		}
 	}
+	
 	
     /**
      * Validates that the provided object is a non-negative double.
@@ -78,4 +80,5 @@ public class Validator {
 			throw new IllegalArgumentException("Expected a Double but got: " + obj.getClass().getName());
 		}
 	}
+	
 }

@@ -22,10 +22,14 @@ package keyboard_class;
 
 import java.util.Scanner;
 
+import data_classes.BankAccount;
+import internal_validation_classes.Validator;
+
 public class Keyboard {
 	
 	// keyboard fields
 	private static Scanner input;
+	BankAccount account;
 	
 	
 	/**
@@ -110,11 +114,61 @@ public class Keyboard {
 				}
 			}
 			catch(NumberFormatException e) {
-				System.out.println();
+				System.out.println(errorMsg);
 			}
 		}
 		return num;
 	}
+	
+	
+	/**
+	 * Prompts the user for integer input within a specified range, validates the input, 
+	 * and returns the valid integer.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid integer within the specified range is entered. If the user enters an 
+	 * invalid integer (i.e., the input cannot be parsed as an integer or is outside the range), 
+	 * the method displays an error message and prompts the user to try again. The method returns 
+	 * the valid integer once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid integer or is out of range.
+	 * @param low the lower bound of the valid range (inclusive).
+	 * @param high the upper bound of the valid range (inclusive).
+	 * @return the integer value entered by the user within the specified range.
+	 */
+	public int readInteger(String errorMsg, int low, int high) {
+		
+		int num = 0;
+		String strInput;
+		boolean valid = false;
+		
+		while(!valid) {
+		
+			input.nextLine();
+			strInput = input.nextLine();
+			
+			try {
+				num = Integer.parseInt(strInput);
+				if(num >= low && num <= high) {
+					valid = true;
+				}
+				else {
+					System.out.println(errorMsg);
+				}
+			}
+			catch(NumberFormatException e) {
+				System.out.println(errorMsg);
+			}
+		}
+		return num;
+	}
+	
+	
+	
+	
+	
+	
 	
 	public Double readDouble(String promptMsg, String errorMsg) {
 		
@@ -129,47 +183,6 @@ public class Keyboard {
 			try {
 				num = Double.parseDouble(strInput);
 				valid = true;
-			}
-			catch(NumberFormatException e) {
-				System.out.println(errorMsg);
-			}
-		}
-		return num;
-	}
-	
-	
-	/**
-	 * Prompts the user for an account number, validates the input, and returns the valid account number.
-	 * 
-	 * This method continuously prompts the user for input using the provided prompt message
-	 * until a valid account number is entered. A valid account number is one that is at least
-	 * 4 digits long and greater than 1000. If the user enters an invalid account number (i.e., 
-	 * the input cannot be parsed as an integer or does not meet the criteria), the method displays 
-	 * an error message and prompts the user to try again. The method returns the valid account number 
-	 * once entered by the user.
-	 *
-	 * @param promptMsg the message to display to prompt the user for input.
-	 * @param errorMsg the error message to display if the input is not a valid account number.
-	 * @return the account number entered by the user.
-	 */
-	public int readAccountNumber(String promptMsg, String errorMsg) {
-		
-		int num = 0;
-		String strInput;
-		boolean valid = false;
-		
-		while(!valid) {
-			
-			System.out.println(promptMsg);
-			strInput = input.nextLine();
-			
-			try {
-				if(strInput.length() >= 4) {
-					num = Integer.parseInt(strInput);
-					if(num > 1000) {
-						valid = true;
-					}
-				}
 			}
 			catch(NumberFormatException e) {
 				System.out.println(errorMsg);
@@ -213,6 +226,63 @@ public class Keyboard {
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// these violate what the class is actually meant to do. this logic doesnt belong here
+	
+	
+	
+	/**
+	 * Prompts the user for an account number, validates the input, and returns the valid account number.
+	 * 
+	 * This method continuously prompts the user for input using the provided prompt message
+	 * until a valid account number is entered. A valid account number is one that is at least
+	 * 4 digits long and greater than 1000. If the user enters an invalid account number (i.e., 
+	 * the input cannot be parsed as an integer or does not meet the criteria), the method displays 
+	 * an error message and prompts the user to try again. The method returns the valid account number 
+	 * once entered by the user.
+	 *
+	 * @param promptMsg the message to display to prompt the user for input.
+	 * @param errorMsg the error message to display if the input is not a valid account number.
+	 * @return the account number entered by the user.
+	 */
+	public int readAccountNumber(String promptMsg, String errorMsg) {
+		
+		int num = 0;
+		String strInput;
+		boolean valid = false; // refine this to use readString()
+		
+		while(!valid) {
+			
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			
+			try {
+				if(strInput.length() >= 4) {
+					num = Integer.parseInt(strInput);
+					if(num > 1000) {  // this logic belongs it bank account (account.validateAccountNumber)
+						valid = true;
+					}
+				}
+			}
+			catch(NumberFormatException e) {
+				System.out.println(errorMsg);
+			}
+		}
+		return num;
+	}
+	
+	
+	
 	/**
 	 * Prompts the user for an account type, validates the input, and returns the valid account type.
 	 * 
@@ -236,7 +306,7 @@ public class Keyboard {
 			System.out.println(promptMsg);
 			strInput = input.nextLine();	
 			
-			if(strInput.equalsIgnoreCase("savings") || strInput.equalsIgnoreCase("checking")) {
+			if(BankAccount.isValidAccountType(strInput)) { // this logic belongs in (account.validateAccountType())
 				valid = true;
 			}
 			else {
@@ -246,6 +316,8 @@ public class Keyboard {
 		return strInput;
 	}
 	
+	
+
 
 }
 
