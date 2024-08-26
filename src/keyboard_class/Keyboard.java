@@ -17,19 +17,17 @@
  * that the user's input can be correctly parsed into the desired type.
  */
 
-
 package keyboard_class;
 
 import java.util.Scanner;
 
+import data_classes.Bank;
 import data_classes.BankAccount;
-import internal_validation_classes.Validator;
 
 public class Keyboard {
 	
 	// keyboard fields
 	private static Scanner input;
-	BankAccount account;
 	
 	
 	/**
@@ -41,6 +39,8 @@ public class Keyboard {
 		input = new Scanner(System.in);
 	}
 	
+	
+	// General Methods
 	
 	/**
 	 * Prompts the user for integer input, validates the input, and returns the valid integer.
@@ -57,61 +57,15 @@ public class Keyboard {
 	public int readInteger(String promptMsg, String errorMsg) {
 		
 		int num = 0;
-		String strInput;
-		boolean valid = false;
-		
-		while(valid == false) {
-			System.out.println(promptMsg);
-			strInput = input.nextLine();
-			
-			try {
-				num = Integer.parseInt(strInput);
-				valid = true;
-			}
-			catch(NumberFormatException e) {
-				System.out.println(errorMsg);
-			}
-		}
-		return num;
-	}
-	
-	
-	/**
-	 * Prompts the user for integer input within a specified range, validates the input, 
-	 * and returns the valid integer.
-	 * 
-	 * This method continuously prompts the user for input using the provided prompt message
-	 * until a valid integer within the specified range is entered. If the user enters an 
-	 * invalid integer (i.e., the input cannot be parsed as an integer or is outside the range), 
-	 * the method displays an error message and prompts the user to try again. The method returns 
-	 * the valid integer once entered by the user.
-	 *
-	 * @param promptMsg the message to display to prompt the user for input.
-	 * @param errorMsg the error message to display if the input is not a valid integer or is out of range.
-	 * @param low the lower bound of the valid range (inclusive).
-	 * @param high the upper bound of the valid range (inclusive).
-	 * @return the integer value entered by the user within the specified range.
-	 */
-	public int readInteger(String promptMsg, String errorMsg, int low, int high) {
-		
-		int num = 0;
-		String strInput;
+		String strInput = null;
 		boolean valid = false;
 		
 		while(!valid) {
-			
 			System.out.println(promptMsg);
-			input.nextLine();
 			strInput = input.nextLine();
-			
 			try {
 				num = Integer.parseInt(strInput);
-				if(num >= low && num <= high) {
-					valid = true;
-				}
-				else {
-					System.out.println(errorMsg);
-				}
+				valid = true;
 			}
 			catch(NumberFormatException e) {
 				System.out.println(errorMsg);
@@ -140,14 +94,12 @@ public class Keyboard {
 	public int readInteger(String errorMsg, int low, int high) {
 		
 		int num = 0;
-		String strInput;
+		String strInput = null;
 		boolean valid = false;
 		
 		while(!valid) {
-		
 			input.nextLine();
 			strInput = input.nextLine();
-			
 			try {
 				num = Integer.parseInt(strInput);
 				if(num >= low && num <= high) {
@@ -163,34 +115,7 @@ public class Keyboard {
 		}
 		return num;
 	}
-	
-	
-	
-	
-	
-	
-	
-	public Double readDouble(String promptMsg, String errorMsg) {
-		
-		Double num = 0.0;
-		String strInput;
-		boolean valid = false;
-		
-		while(valid == false) {
-			System.out.println(promptMsg);
-			strInput = input.nextLine();
-			
-			try {
-				num = Double.parseDouble(strInput);
-				valid = true;
-			}
-			catch(NumberFormatException e) {
-				System.out.println(errorMsg);
-			}
-		}
-		return num;
-	}
-	
+
 	
 	/**
 	 * Prompts the user for string input, validates the input, and returns the valid string.
@@ -227,18 +152,7 @@ public class Keyboard {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// these violate what the class is actually meant to do. this logic doesnt belong here
-	
+	// Bank Account methods
 	
 	
 	/**
@@ -255,32 +169,27 @@ public class Keyboard {
 	 * @param errorMsg the error message to display if the input is not a valid account number.
 	 * @return the account number entered by the user.
 	 */
-	public int readAccountNumber(String promptMsg, String errorMsg) {
-		
+	public int readAccountNumber(String promptMsg) {
 		int num = 0;
-		String strInput;
-		boolean valid = false; // refine this to use readString()
+		String strInput = null;
+		boolean valid = false; 
 		
-		while(!valid) {
-			
+		while(!valid) {	
 			System.out.println(promptMsg);
 			strInput = input.nextLine();
-			
 			try {
-				if(strInput.length() >= 4) {
-					num = Integer.parseInt(strInput);
-					if(num > 1000) {  // this logic belongs it bank account (account.validateAccountNumber)
-						valid = true;
-					}
-				}
-			}
-			catch(NumberFormatException e) {
-				System.out.println(errorMsg);
-			}
+				num = Integer.parseInt(strInput);
+				BankAccount.validateAccountNumber(num);
+				valid = true;	
+	        } 
+			catch (NumberFormatException e) {
+	            System.out.println(e.getMessage());
+	        } 
+			catch (IllegalArgumentException e) {
+	        }
 		}
 		return num;
 	}
-	
 	
 	
 	/**
@@ -296,29 +205,131 @@ public class Keyboard {
 	 * @param errorMsg the error message to display if the input is not a valid account type.
 	 * @return the account type entered by the user ("savings" or "checking").
 	 */
-	public String readAccountType(String promptMsg, String errorMsg) {
-		
+	public String readAccountType(String promptMsg) {
 		String strInput = null;
-		boolean valid = false;
+		boolean valid 	= false;
 		
 		while(!valid){
-			
 			System.out.println(promptMsg);
 			strInput = input.nextLine();	
-			
-			if(BankAccount.isValidAccountType(strInput)) { // this logic belongs in (account.validateAccountType())
+			try {
+				BankAccount.validateAccountType(strInput);
 				valid = true;
 			}
-			else {
-				System.out.println(errorMsg);
-			}
+			catch (IllegalArgumentException e) {
+		        System.out.println(e.getMessage());
+		    }
 		}
 		return strInput;
 	}
 	
 	
+	public String readName(String promptMsg) {
+		String strInput = null;
+		boolean valid 	= false;
+		
+		while(!valid) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			try {
+				BankAccount.validateName(strInput);
+				valid = true;
+			}
+			catch (IllegalArgumentException e) {
+		        System.out.println(e.getMessage());
+		    }
+		}
+		return strInput;
+	}
+	
+	
+	public int readAge(String promptMsg) {
+		String strInput = null;
+		int num = 0;
+		boolean valid 	= false;
+		
+		while(!valid) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			try {
+				num = Integer.parseInt(strInput);
+				BankAccount.validateAge(num);
+				valid = true;
+			}
+			catch (NumberFormatException e) {
+	            System.out.println(e.getMessage());
+	        } 
+			catch (IllegalArgumentException e) {
+	            System.out.println(e.getMessage()); 
+	        }
+		}
+		return num;
+	}
+	
+	
+	public String readAddress(String promptMsg) {
+		String strInput = null;
+		boolean valid 	= false;
+		
+		while(!valid) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			try {
+				BankAccount.validateAddress(strInput);
+				valid = true;
+			}
+			catch (IllegalArgumentException e) {
+		        System.out.println(e.getMessage()); 
+		    }
+		}
+		return strInput;
+	}
 
-
+	
+	public double readBalance(String promptMsg) {
+		String strInput = null;
+		Double num = 0.0;
+		boolean valid 	= false;
+		
+		while(!valid) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			try {
+				num = Double.parseDouble(strInput);
+				BankAccount.validateBalance(num);
+				valid = true;
+			}
+			catch (NumberFormatException e) {
+	            System.out.println(e.getMessage());
+	        } 
+			catch (IllegalArgumentException e) {
+	            System.out.println(e.getMessage()); 
+			}
+		}
+		return num;
+	}
+	
+	
+	
+	// bank methods
+	
+	public String readBankName(String promptMsg) {
+		String strInput = null;
+		boolean valid 	= false;
+		
+		while(!valid) {
+			System.out.println(promptMsg);
+			strInput = input.nextLine();
+			try {
+				Bank.validateBankName(strInput);
+				valid = true;
+			}
+			catch (IllegalArgumentException e) {
+		        System.out.println(e.getMessage()); 
+		    }
+		}
+		return strInput;
+	}
 }
 
 

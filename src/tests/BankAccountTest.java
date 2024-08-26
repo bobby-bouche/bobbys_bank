@@ -27,7 +27,6 @@ package tests;
 
 import data_classes.Bank;
 import data_classes.BankAccount;
-import internal_validation_classes.IllegalWithdrawException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -37,6 +36,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import Exception_classes.IllegalWithdrawException;
 
 /**
  * Unit tests for the BankAccount class.

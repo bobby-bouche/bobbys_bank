@@ -25,13 +25,8 @@
 
 package data_classes;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Map;
-
-import internal_validation_classes.Validator;
 import keyboard_class.Keyboard;
 
 
@@ -40,13 +35,13 @@ public class Bank {
 	// bank fields
 	private Map<Integer, BankAccount> accounts;
 	private String name;
-	private Keyboard kb;
+	private static Keyboard kb;
 	
 	
 	// constructor
 	
 	public Bank(String name) {
-		Validator.validateString(name);
+		validateBankName(name);
 		this.name = name;
 		accounts = new HashMap<>();
 		kb 		 = new Keyboard();
@@ -69,45 +64,79 @@ public class Bank {
 		}
 	}
 	
-	// TODO validate bankName business rule, < 20 ?
+	// validate bankName 
+	public static void validateBankName(String name) {
+		if(name.isBlank() || name.length() > 15) {
+			throw new IllegalArgumentException("Invalid Bank name: " + name + ". Name must not be blank and be under 15 characters.");
+		}
+	}
 	
 	
+	// getter methods
+	public Map<Integer, BankAccount> getAccounts() {
+		return accounts;
+	}
+	
+	/**
+	 * Gets the name of the bank.
+	 * 
+	 * This method returns the name of the bank as a String.
+	 *
+	 * @return the name of the bank.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	
+	// setter methods
+	
+	/**
+	 * Sets the name of the bank.
+	 * 
+	 * This method allows you to change the name of the bank.
+	 *
+	 * @param name the new name of the bank.
+	 */
+	public void setName(String name) {
+		validateBankName(name);
+		this.name = name;
+	}
+	
+
 	// TODO method to open new account
 	public void openNewAccount() {
 		
 		BankAccount account = new BankAccount(this);
-		String errorMsg = "Error, please try again.\n";
-		
-		//accType, FName, LName, age, address, balance, bank
 		
 		String accType;
 		String accTypePromptMsg = "Enter account type - 'checking' or 'savings':\n";
-		accType = kb.readAccountType(accTypePromptMsg, errorMsg); // this should be just readString, let BankAccount validate for savings/checking
+		accType = kb.readAccountType(accTypePromptMsg);
 		account.setAccType(accType);
 		
 		String fName;
 		String fNamePromptMsg = "Enter first name: \n";
-		fName = kb.readString(fNamePromptMsg, errorMsg);
+		fName = kb.readName(fNamePromptMsg);
 		account.setFirstName(fName);
 		
 		String lName;
 		String lNamePromptMsg = "Enter last name: \n";
-		lName = kb.readString(lNamePromptMsg, errorMsg);
+		lName = kb.readName(lNamePromptMsg);
 		account.setLastName(lName);
 		
 		int age;
 		String agePromptMsg = "Enter age: \n";
-		age = kb.readInteger(agePromptMsg, errorMsg);
+		age = kb.readAge(agePromptMsg);
 		account.setAge(age);
 		
 		String address;
 		String addressPromptMsg = "Enter address: \n";
-		address = kb.readString(addressPromptMsg, errorMsg);
-		account.setNewAddress(address);
+		address = kb.readAddress(addressPromptMsg);
+		account.setAddress(address);
 		
 		Double balance;
 		String balancePromptMsg = "Enter balance: \n";
-		balance = kb.readDouble(balancePromptMsg, errorMsg);
+		balance = kb.readBalance(balancePromptMsg);
 		account.setBalance(balance);
 		
 //		try {
@@ -166,6 +195,8 @@ public class Bank {
 		}
 	}
 	
+	
+	
 	// TODO method to display account information
 	
 	
@@ -175,29 +206,6 @@ public class Bank {
 	// TODO method to save account informtion to a file
 	
 
-
-	/**
-	 * Gets the name of the bank.
-	 * 
-	 * This method returns the name of the bank as a String.
-	 *
-	 * @return the name of the bank.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	
-	/**
-	 * Sets the name of the bank.
-	 * 
-	 * This method allows you to change the name of the bank.
-	 *
-	 * @param name the new name of the bank.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	
 	/**
