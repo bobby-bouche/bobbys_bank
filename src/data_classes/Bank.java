@@ -34,13 +34,16 @@ public class Bank {
 	
 	// bank fields
 	private Map<Integer, BankAccount> accounts;
+	private int ID;
 	private String name;
 	private static Keyboard kb;
 	
 	
 	// constructor
 	
-	public Bank(String name) {
+	public Bank(int id, String name) {
+		validateBankID(ID);
+		this.ID = id;
 		validateBankName(name);
 		this.name = name;
 		accounts = new HashMap<>();
@@ -61,6 +64,13 @@ public class Bank {
 	public static void validateBankAccount(Object obj) {
 		if(!(obj instanceof BankAccount)) {
 			throw new IllegalArgumentException("Expected a BankAccout object but got: " + obj.getClass().getName());
+		}
+	}
+	
+	// validate bankID
+	public static void validateBankID(int id) {
+		if(id < 100) {
+			throw new IllegalArgumentException("Invalid bank ID: " + id + ". Please try again..");
 		}
 	}
 	
@@ -87,6 +97,10 @@ public class Bank {
 	public String getName() {
 		return name;
 	}
+	
+	public int getID() {
+		return ID;
+	}
 
 	
 	// setter methods
@@ -101,6 +115,11 @@ public class Bank {
 	public void setName(String name) {
 		validateBankName(name);
 		this.name = name;
+	}
+	
+	public void setBankID(int id) {
+		validateBankID(id);
+		this.ID = id;
 	}
 	
 
