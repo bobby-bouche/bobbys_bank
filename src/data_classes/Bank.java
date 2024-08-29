@@ -49,6 +49,11 @@ public class Bank {
 		accounts = new HashMap<>();
 		kb 		 = new Keyboard();
 	}
+	
+	public Bank() {
+		accounts = new HashMap<>();
+		kb 		 = new Keyboard();
+	}
 
 	
 	// validation methods

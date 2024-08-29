@@ -2,10 +2,14 @@ package driver_classes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 import data_classes.Bank;
 import data_classes.BankAccount;
@@ -15,7 +19,7 @@ public class DatabaseManager {
 	
 	// DatabaseManager fields
 	private static List<Bank> banks;
-	private Map<Integer, BankAccount> bankAccounts;
+	private static Map<Integer, BankAccount> bankAccounts;
 	
 	private static Keyboard kb;
 	Connection connection;
@@ -66,6 +70,57 @@ public class DatabaseManager {
 		}
 		return con;
 	}
+	
+	
+	// TODO method to read all data from database
+	void readAllDataFromDatabase() {
+		
+		connection = connectDB();
+		
+		
+		
+	}
+	
+	// TODO Smethod to retrieve account data
+	public static void readAccountData(Connection con) throws SQLException {
+		
+		List<BankAccount> accounts = new ArrayList<>();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT * FROM ACCOUNT");
+		
+		while(rs.next()) {
+			
+			BankAccount account = new BankAccount();
+		}
+		
+	}
+	
+	
+	
+	
+	// TODO method to retieve bank data
+	public static List<Bank> readBankData(Connection con, List<BankAccount> accounts) throws SQLException {
+		
+		List<Bank> banks = new ArrayList<>();
+		Statement stmt 	 = con.createStatement();
+		ResultSet rs     = stmt.executeQuery("SELECT * FROM BANK");
+		
+		while(rs.next()) {
+			
+			Bank bank = new Bank();
+			bank.setBankID(rs.getInt("bankID"));
+			bank.setName( rs.getString("name"));
+			
+			
+			banks.add(bank);
+		}
+		rs.close();
+		stmt.close();
+		
+		return banks;
+	}
+	
+	
 	
 	
 }
